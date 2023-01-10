@@ -16,8 +16,17 @@ class TransformerLM(nn.Module):
         self.position_encoder = PositionalEncoding(d_model, dropout)
         self.encoder_layers = TransformerEncoderLayer(d_model, heads_num, d_hid, dropout)
         self.transformer_encoder = TransformerEncoder(self.encoder_layers, layers_num)
+        self.embed_encoder = nn.Embedding(vocab_size, d_model)
+        self.d_model = d_model
+        self.linear_decoder = nn.Linear(d_model, vocab_size)
 
+        self.init_weights()
 
+    def init_weights(self) -> None:
+        init_range = 0.1
+        self.embed_encoder.weight.data.uniform_(-init_range, init_range)
+        self.linear_decoder.bias.data.zero_()
+        self.linear_decoder.weight.data.uniform_(-init_range, init_range)
 
 
 class PositionalEncoding(nn.Module):
