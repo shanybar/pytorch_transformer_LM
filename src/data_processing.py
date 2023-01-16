@@ -15,9 +15,22 @@ def process_data(tokenizer, vocab, raw_text_iter: dataset.IterableDataset) -> Te
     return torch.cat(tuple(filter(lambda t: t.numel() > 0, data)))
 
 
+def batchify(data: Tensor, batch_size: int) -> Tensor:
+    """
+    Divides the data into batch_size separate elements, removing extra elements
+    that would not fit.
+
+    :param data: Tensor, shape [N]
+    :param batch_size: int, batch size
+    :return: Tensor of shape [N // batch_size, batch_size]
+    """
+    seq_len = data.size() // batch_size
+
+
 def load_data():
     train_iter = WikiText2(split='train')
     tokenizer = get_tokenizer('basic_english')
     vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=['<unk>'])
     vocab.set_default_index(vocab['<unk>'])
+
 
