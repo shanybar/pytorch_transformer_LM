@@ -25,6 +25,11 @@ def batchify(data: Tensor, batch_size: int) -> Tensor:
     :return: Tensor of shape [N // batch_size, batch_size]
     """
     seq_len = data.size() // batch_size
+    data = data[:seq_len * batch_size]
+    data = data.view(batch_size, seq_len).t().contiguous() # shape the data to be in shape
+    # [batch size, seq_len], transpose it and
+    # make it contiguous (will rearrange the memory allocation after the transpose so that the tensor is contiguous)
+    return data
 
 
 def load_data():
@@ -33,4 +38,11 @@ def load_data():
     vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=['<unk>'])
     vocab.set_default_index(vocab['<unk>'])
 
+    train_iter, val_iter, test_iter = WikiText2()
+    train_data = process_data(tokenizer, vocab, train_iter)
+    val_data = process_data(tokenizer, vocab, val_iter)
+    test_data = process_data(tokenizer, vocab, test_iter)
+
+
+    # after batchify apply to(device)
 
