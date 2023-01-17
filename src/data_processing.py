@@ -43,6 +43,13 @@ def load_data():
     val_data = process_data(tokenizer, vocab, val_iter)
     test_data = process_data(tokenizer, vocab, test_iter)
 
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    batch_size = 20
+    eval_batch_size = 10
 
-    # after batchify apply to(device)
+    train_data = batchify(train_data, batch_size=batch_size).to(device)
+    val_data = batchify(val_data, batch_size=eval_batch_size).to(device)
+    test_data = batchify(test_data, batch_size=eval_batch_size).to(device)
+
+    return train_data, val_data, test_data
 
