@@ -1,6 +1,7 @@
 
 import torch
 from torch import Tensor
+from typing import Tuple
 from torch.utils.data import dataset
 from torchtext.datasets import WikiText2
 from torchtext.data.utils import get_tokenizer
@@ -52,4 +53,19 @@ def load_data():
     test_data = batchify(test_data, batch_size=eval_batch_size).to(device)
 
     return train_data, val_data, test_data
+
+
+def get_batch(source : Tensor, i: int) -> Tuple[Tensor, Tensor]:
+    """
+
+    :param source: Tensor, shape [full_seq_len, batch_size]
+    :param i: int
+    :return: Tuple (data, target), where data has shape [seq_len, batch_size]
+    and target has shape [seq_len * batch_size]
+    """
+    bptt = 35
+    seq_len = min(bptt, len(source) - 1 - i)
+    data = source[i:i + seq_len]
+    target = source[i+1:i+1+seq_len].reshape(-1)
+    return data, target
 
