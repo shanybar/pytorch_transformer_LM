@@ -54,7 +54,12 @@ def train_single_epoch(model: nn.Module, train_data, optimizer, scheduler, loss_
 
         optimizer.zero_grad()
         loss.backward()
+        # torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)
+        optimizer.step()
 
+        total_loss += loss.item()
+        if batch % log_interval == 0 and batch > 0:
+            
 
 
 def eval_model():
