@@ -54,7 +54,7 @@ def load_data():
     return train_data, val_data, test_data, vocab
 
 
-def get_batch(source : Tensor, i: int) -> Tuple[Tensor, Tensor]:
+def get_batch(source : Tensor, i: int, bptt: int) -> Tuple[Tensor, Tensor]:
     """
 
     :param source: Tensor, shape [full_seq_len, batch_size]
@@ -62,7 +62,6 @@ def get_batch(source : Tensor, i: int) -> Tuple[Tensor, Tensor]:
     :return: Tuple (data, target), where data has shape [seq_len, batch_size]
     and target has shape [seq_len * batch_size]
     """
-    bptt = 35
     seq_len = min(bptt, len(source) - 1 - i)
     data = source[i:i + seq_len]
     target = source[i+1:i+1+seq_len].reshape(-1)
