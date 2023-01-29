@@ -25,7 +25,7 @@ def batchify(data: Tensor, batch_size: int) -> Tensor:
     :param batch_size: int, batch size
     :return: Tensor of shape [N // batch_size, batch_size]
     """
-    seq_len = data.size() // batch_size
+    seq_len = data.size(0) // batch_size
     data = data[:seq_len * batch_size]
     data = data.view(batch_size, seq_len).t().contiguous() # shape the data to be in shape
     # [batch size, seq_len], transpose it and

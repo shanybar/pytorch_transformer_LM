@@ -6,8 +6,10 @@ from torch import nn
 from src.data_processing import load_data, get_batch
 from src.models import TransformerLM, generate_mask_matrix
 
+
 def train_model():
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    is_cuda = torch.cuda.is_available()
+    device = torch.device('cuda' if is_cuda else 'cpu')
     train_data, val_data, test_data, vocab = load_data()
     train_data = train_data.to(device)
     val_data = val_data.to(device)
@@ -109,3 +111,6 @@ def eval_model(model: nn.Module, eval_data, loss_func,
             total_loss += seq_len * loss_func(output_flat, labels).item()
 
     return total_loss / len(eval_data)
+
+if __name__ == '__main__':
+    train_model()
