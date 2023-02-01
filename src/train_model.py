@@ -8,6 +8,7 @@ from src.models import TransformerLM, generate_mask_matrix
 
 
 def train_model():
+    print(torch.backends.cudnn.enabled)
     is_cuda = torch.cuda.is_available()
     device = torch.device('cuda' if is_cuda else 'cpu')
     train_data, val_data, test_data, vocab = load_data()
@@ -74,7 +75,8 @@ def train_single_epoch(model: nn.Module, train_data, optimizer, scheduler, loss_
         if seq_len != bptt: # only for the last batch
             src_mask = src_mask[:seq_len, :seq_len]
         output = model(data, src_mask)
-        loss = loss_func(output.view(-1, num_tokens), labels)
+        output = output.view(-1, num_tokens)
+        loss = loss_func(output, labels)
 
         optimizer.zero_grad()
         loss.backward()
@@ -87,9 +89,9 @@ def train_single_epoch(model: nn.Module, train_data, optimizer, scheduler, loss_
             ms_per_batch = (time.time() - start_time) * 1000 / log_interval
             curr_loss = total_loss / log_interval
             perplexity = math.exp(curr_loss)
-            print(f'| epoch: {epoch:3d} | batch: {batch:5d}/{num_batches:5d}'
-                  f'| lr: {last_lr:02.2f} | ms/batch: {ms_per_batch:5.2f}'
-                  f'| loss: {curr_loss:5.2f | perplexity: {perplexity: 8.2f}}')
+            print(f'| epoch {epoch:3d} | batch {batch:5d}/{num_batches:5d}')
+            print(f'| lr {last_lr:02.2f} | ms/batch: {ms_per_batch:5.2f}')
+            print(f'| loss {curr_loss:5.2f | perplexity {perplexity: 8.2f}}')
             total_loss = 0
             start_time = time.time()
 

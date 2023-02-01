@@ -69,5 +69,5 @@ class PositionalEncoding(nn.Module):
         :param x: Tensor, shape [seq_len, batch_size, embeddings_dim]
         :return: the tensor x summed with the position embeddings
         """
-        x = x + self.position_embeddings[:x.size(0)]
+        x = x + self.position_embeds[:x.size(0)]
         return self.dropout(x)
