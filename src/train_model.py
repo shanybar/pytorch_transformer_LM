@@ -69,7 +69,7 @@ def train_single_epoch(model: nn.Module, train_data, optimizer, scheduler, loss_
     src_mask = generate_mask_matrix(bptt).to(device)
 
     num_batches = len(train_data) // bptt
-    for batch, i in enumerate(range(0, train_data.size(0) - 1), bptt):
+    for batch, i in enumerate(range(0, train_data.size(0) - 1, bptt)):
         data, labels = get_batch(train_data, i, bptt)
         seq_len = data.size(0)
         if seq_len != bptt: # only for the last batch
@@ -90,8 +90,8 @@ def train_single_epoch(model: nn.Module, train_data, optimizer, scheduler, loss_
             curr_loss = total_loss / log_interval
             perplexity = math.exp(curr_loss)
             print(f'| epoch {epoch:3d} | batch {batch:5d}/{num_batches:5d}')
-            print(f'| lr {last_lr:02.2f} | ms/batch: {ms_per_batch:5.2f}')
-            print(f'| loss {curr_loss:5.2f | perplexity {perplexity: 8.2f}}')
+            print(f'| lr {last_lr:02.2f} | ms/batch {ms_per_batch:5.2f}')
+            print(f'| loss {curr_loss:5.2f} | perplexity {perplexity: 5.2f}')
             total_loss = 0
             start_time = time.time()
 
