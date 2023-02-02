@@ -102,7 +102,7 @@ def eval_model(model: nn.Module, eval_data, loss_func,
     total_loss = 0.
     src_mask = generate_mask_matrix(bptt).to(device)
 
-    with torch.no_grad:
+    with torch.no_grad():
         for i in range(0, eval_data.size(0) - 1, bptt):
             data, labels = get_batch(eval_data, i, bptt)
             seq_len = data.size(0)
